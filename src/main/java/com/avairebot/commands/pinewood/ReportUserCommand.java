@@ -13,7 +13,7 @@ import com.avairebot.database.transformers.GuildTransformer;
 import com.avairebot.factories.RequestFactory;
 import com.avairebot.requests.Request;
 import com.avairebot.requests.Response;
-import com.avairebot.requests.service.user.rank.RobloxUserGroupRankService;
+import com.avairebot.roblox.group.v1.service.RobloxUserGroupRankService;
 import com.avairebot.utilities.CheckPermissionUtil;
 import com.avairebot.utilities.MentionableUtil;
 import com.avairebot.utilities.NumberUtil;

@@ -1,4 +1,4 @@
-package com.avairebot.requests.service.user.rank;
+package com.avairebot.roblox.group.v1.service;
 
 import java.util.Date;
 import java.util.List;
@@ -6,15 +6,12 @@ import java.util.List;
 public class RobloxUserGroupRankService {
 
     public List<Data> data;
-
     public List<Data> getData() {
         return data;
     }
-
     public boolean hasData() {
         return getData() != null && !getData().isEmpty();
     }
-
     public class Data {
         private Group group;
         private Role role;

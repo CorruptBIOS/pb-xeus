@@ -11,7 +11,7 @@ import com.avairebot.contracts.commands.CommandGroups;
 import com.avairebot.factories.RequestFactory;
 import com.avairebot.requests.Request;
 import com.avairebot.requests.Response;
-import com.avairebot.requests.service.user.rank.RobloxUserGroupRankService;
+import com.avairebot.roblox.group.v1.service.RobloxUserGroupRankService;
 import com.avairebot.utilities.NumberUtil;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;

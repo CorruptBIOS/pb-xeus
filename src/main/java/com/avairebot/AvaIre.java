@@ -71,6 +71,7 @@ import com.avairebot.onwatch.OnWatchManager;
 import com.avairebot.pinewood.VoiceWhitelistManager;
 import com.avairebot.plugin.PluginLoader;
 import com.avairebot.plugin.PluginManager;
+import com.avairebot.roblox.RobloxAPIManager;
 import com.avairebot.scheduler.ScheduleHandler;
 import com.avairebot.servlet.WebServlet;
 import com.avairebot.servlet.routes.*;
@@ -154,6 +155,7 @@ public class AvaIre {
     private final FeatureBlacklist featureBlacklist;
     private final BlacklistManager blacklistManager;
     private final VoiceWhitelistManager voiceWhitelistManager;
+    private final RobloxAPIManager robloxAPIManager;
     private GitLabApi gitLabApi;
     private Carbon shutdownTime = null;
     private int shutdownCode = ExitCodes.EXIT_CODE_RESTART;
@@ -469,6 +471,9 @@ public class AvaIre {
         log.info("Preparing voice whitelist manager.");
         voiceWhitelistManager = new VoiceWhitelistManager(this);
 
+        log.info("Preparing roblox api manager");
+        robloxAPIManager = new RobloxAPIManager(this);
+
         log.info("Preparing Lavalink");
         AudioHandler.setAvaire(this);
         LavalinkManager.LavalinkManagerHolder.lavalink.start(this);
@@ -636,6 +641,10 @@ public class AvaIre {
 
     public BlacklistManager getBlacklistManager() {
         return blacklistManager;
+    }
+
+    public RobloxAPIManager getRobloxAPIManager() {
+        return robloxAPIManager;
     }
 
     public void shutdown() {
