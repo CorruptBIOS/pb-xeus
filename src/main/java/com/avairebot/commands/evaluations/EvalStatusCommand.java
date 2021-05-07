@@ -135,7 +135,6 @@ public class EvalStatusCommand extends Command {
             return 0;
         }
     }
-
     public boolean isValidRobloxUser(String un) {
 
         try {
@@ -147,5 +146,4 @@ public class EvalStatusCommand extends Command {
             return false;
         }
     }
-
 }
