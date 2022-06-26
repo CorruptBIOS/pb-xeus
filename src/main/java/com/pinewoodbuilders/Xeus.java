@@ -56,9 +56,7 @@ import com.pinewoodbuilders.handlers.EventEmitter;
 import com.pinewoodbuilders.handlers.MainEventHandler;
 import com.pinewoodbuilders.handlers.PluginEventHandler;
 import com.pinewoodbuilders.handlers.events.ApplicationShutdownEvent;
-import com.pinewoodbuilders.imagegen.RankBackgroundHandler;
 import com.pinewoodbuilders.language.I18n;
-import com.pinewoodbuilders.level.LevelManager;
 import com.pinewoodbuilders.metrics.Metrics;
 import com.pinewoodbuilders.middleware.*;
 import com.pinewoodbuilders.middleware.global.IsCategoryEnabled;
@@ -138,7 +136,6 @@ public class Xeus {
     private final CacheManager cache;
     private final Blacklist blacklist;
     private final DatabaseManager database;
-    private final LevelManager levelManager;
     private final PluginManager pluginManager;
     private final VoteManager voteManager;
     private final MuteManager muteManger;
@@ -177,7 +174,6 @@ public class Xeus {
 
         this.eventEmitter = new EventEmitter(this);
         this.cache = new CacheManager(this);
-        this.levelManager = new LevelManager();
         this.waiter = new EventWaiter();
 
         log.info("Loading configuration");
@@ -310,9 +306,6 @@ public class Xeus {
         log.info("Preparing I18n");
         I18n.start(this);
 
-        log.info("Creating rank backgrounds");
-        RankBackgroundHandler.getInstance().start();
-
         log.info("Creating plugin manager and registering plugins...");
         pluginManager = new PluginManager(this);
 
@@ -391,10 +384,6 @@ public class Xeus {
         servlet = new WebServlet(config.getInt("web-servlet.port",
             config.getInt("metrics.port", WebServlet.defaultPort)
         ));
-
-        if (getConfig().getBoolean("web-servlet.api-routes.leaderboard", true)) {
-            servlet.registerGet("/leaderboard/:id", new GetLeaderboardPlayers());
-        }
 
         if (getConfig().getBoolean("web-servlet.api-routes.players", true)) {
             servlet.registerGet("/players/cleanup", new GetPlayerCleanup());
@@ -586,9 +575,6 @@ public class Xeus {
         return database;
     }
 
-    public LevelManager getLevelManager() {
-        return levelManager;
-    }
 
     public PluginManager getPluginManager() {
         return pluginManager;

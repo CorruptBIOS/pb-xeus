@@ -26,7 +26,6 @@ import com.google.common.cache.CacheBuilder;
 import com.pinewoodbuilders.Environment;
 import com.pinewoodbuilders.Xeus;
 import com.pinewoodbuilders.contracts.handlers.EventHandler;
-import com.pinewoodbuilders.database.controllers.PlayerController;
 import com.pinewoodbuilders.handlers.adapter.*;
 import com.pinewoodbuilders.metrics.Metrics;
 import com.pinewoodbuilders.pinewood.adapter.WhitelistEventAdapter;
@@ -64,9 +63,6 @@ import net.dv8tion.jda.api.events.role.RoleDeleteEvent;
 import net.dv8tion.jda.api.events.role.update.RoleUpdateNameEvent;
 import net.dv8tion.jda.api.events.role.update.RoleUpdatePermissionsEvent;
 import net.dv8tion.jda.api.events.role.update.RoleUpdatePositionEvent;
-import net.dv8tion.jda.api.events.user.update.UserUpdateAvatarEvent;
-import net.dv8tion.jda.api.events.user.update.UserUpdateDiscriminatorEvent;
-import net.dv8tion.jda.api.events.user.update.UserUpdateNameEvent;
 import net.dv8tion.jda.api.utils.concurrent.Task;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -411,23 +407,6 @@ public class MainEventHandler extends EventHandler {
         roleEvent.updateRoleData(event.getGuild());
     }
 
-    @Override
-    public void onUserUpdateDiscriminator(UserUpdateDiscriminatorEvent event) {
-        PlayerController.updateUserData(event.getUser());
-
-    }
-
-    @Override
-    public void onUserUpdateAvatar(UserUpdateAvatarEvent event) {
-        PlayerController.updateUserData(event.getUser());
-
-    }
-
-    @Override
-    public void onUserUpdateName(UserUpdateNameEvent event) {
-        PlayerController.updateUserData(event.getUser());
-
-    }
 
     @Override
     public void onEmoteRemoved(EmoteRemovedEvent event) {

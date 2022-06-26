@@ -21,13 +21,10 @@
 
 package com.pinewoodbuilders.contracts.commands;
 
-import com.pinewoodbuilders.Xeus;
 import com.pinewoodbuilders.commands.CommandContainer;
 import com.pinewoodbuilders.config.YamlConfiguration;
-import com.pinewoodbuilders.database.controllers.PlayerController;
 import com.pinewoodbuilders.database.transformers.GuildSettingsTransformer;
 import com.pinewoodbuilders.database.transformers.GuildTransformer;
-import com.pinewoodbuilders.database.transformers.PlayerTransformer;
 import com.pinewoodbuilders.database.transformers.VerificationTransformer;
 import com.pinewoodbuilders.handlers.DatabaseEventHolder;
 import com.pinewoodbuilders.language.I18n;
@@ -54,7 +51,7 @@ public interface CommandContext {
 
     /**
      * Returns the author of this Message as a {@link net.dv8tion.jda.api.entities.Member member}.
-     * <br>This is just a shortcut to {@link #getGuild()}{@link net.dv8tion.jda.api.entities.Guild#getMember(User) .getMember(getAuthor())}.
+     * <br>This is just a shortcut to {@link #getGuild()}{@link net.dv8tion.jda.api.entities.Guild#getMember(UserSnowflake)}.
      * <br><b>This is only valid if the Message was actually sent in a TextChannel.</b> This will return {@code null}
      * if it was not sent from a TextChannel.
      * <br>You can check the type of channel this message was sent from using {@link #getMessage() getMessage().getChannelType()}.
@@ -120,50 +117,12 @@ public interface CommandContext {
 
     @Nullable
     GuildSettingsTransformer getGuildSettingsTransformer();
+    
 
     /**
-     * Returns the {@link PlayerTransformer player transformer} instance linked to the current message, if
-     * the message was sent as a direct message, or the server the message was sent in has leveling
-     * disabled, or an error occurred while loading the {@link PlayerTransformer transformer}
-     * from the database this will return null.
-     * <p>
-     * This is just a shortcut for calling {@link #getDatabaseEventHolder()}{@link DatabaseEventHolder#getPlayer()}.
-     *
-     * @return The {@link PlayerTransformer player transformer} instance linked to the current guild.
-     */
-    @Nullable
-    PlayerTransformer getPlayerTransformer();
-
-    /**
-     * Returns the {@link PlayerTransformer player transformer} instance linked to the current message, if
-     * the {@link PlayerTransformer player transformer} wasn't autoloaded because the server has leveling
-     * disabled, the method will attempt to load the player transformer directly from
-     * the {@link PlayerController player controller} instead.
-     * <p>
-     * This is just a shortcut for calling {@link #getDatabaseEventHolder()}{@link DatabaseEventHolder#getPlayer()},
-     * but if that returns null, then {@link PlayerController#fetchPlayer(Xeus, Message)}
-     * will automatically be called instead.
-     *
-     * @param avaire The main Xeus instance used to communicate with the rest of the application.
-     * @return Possibly-null, the {@link PlayerTransformer player transformer} for the author of
-     * command context for the current guild, or {@code NULL} if something went wrong.
-     */
-    @Nullable
-    default PlayerTransformer getPlayerTransformerWithForce(@Nonnull Xeus avaire) {
-        PlayerTransformer playerTransformer = getPlayerTransformer();
-        if (playerTransformer != null) {
-            return playerTransformer;
-        }
-        return PlayerController.fetchPlayer(avaire, getMessage());
-    }
-
-    /**
-     * Returns the database event holder, when a message is received by Ava, the users {@link PlayerTransformer player inforatmion},
      * as well as the servers {@link GuildTransformer guild info} is loaded from the database and stored in memory, this object
      * is used for holding both objects to easily fetch guild settings, changing settings, getting player XP, etc.
      * <p>
-     * For shortcuts when getting information from the database event holder, you can use
-     * the {@link #getGuildTransformer()} and {@link #getPlayerTransformer()} methods.
      *
      * @return The database event holder.
      */

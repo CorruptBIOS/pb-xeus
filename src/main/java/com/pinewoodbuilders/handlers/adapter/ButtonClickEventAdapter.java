@@ -821,15 +821,15 @@ public class ButtonClickEventAdapter extends EventAdapter {
     private CompletableFuture<DatabaseEventHolder> loadDatabasePropertiesIntoMemory(final ButtonInteractionEvent event) {
         return CompletableFuture.supplyAsync(() -> {
             if (!event.getChannel().getType().isGuild()) {
-                return new DatabaseEventHolder(null, null, null, null);
+                return new DatabaseEventHolder(null, null, null);
             }
 
             GuildTransformer guild = GuildController.fetchGuild(avaire, event.getGuild());
 
             if (guild == null || !guild.isLevels() || event.getMember().getUser().isBot()) {
-                return new DatabaseEventHolder(guild, null, null, GuildSettingsController.fetchGuildSettingsFromGuild(avaire, event.getGuild()));
+                return new DatabaseEventHolder(guild, null, GuildSettingsController.fetchGuildSettingsFromGuild(avaire, event.getGuild()));
             }
-            return new DatabaseEventHolder(guild, null, null, GuildSettingsController.fetchGuildSettingsFromGuild(avaire, event.getGuild()));
+            return new DatabaseEventHolder(guild, null, GuildSettingsController.fetchGuildSettingsFromGuild(avaire, event.getGuild()));
         });
     }
 

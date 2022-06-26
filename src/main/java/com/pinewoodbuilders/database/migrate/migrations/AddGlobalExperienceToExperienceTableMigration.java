@@ -36,7 +36,7 @@ public class AddGlobalExperienceToExperienceTableMigration implements Migration 
     }
 
     @Override
-    public boolean up(Schema schema) throws SQLException {
+    public boolean down(Schema schema) throws SQLException {
         if (schema.hasColumn(Constants.PLAYER_EXPERIENCE_TABLE_NAME, "global_experience")) {
             return true;
         }
@@ -65,7 +65,7 @@ public class AddGlobalExperienceToExperienceTableMigration implements Migration 
     }
 
     @Override
-    public boolean down(Schema schema) throws SQLException {
+    public boolean up(Schema schema) throws SQLException {
         if (!schema.hasColumn(Constants.PLAYER_EXPERIENCE_TABLE_NAME, "global_experience")) {
             return true;
         }

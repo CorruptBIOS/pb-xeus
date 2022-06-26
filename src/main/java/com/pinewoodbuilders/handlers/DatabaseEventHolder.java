@@ -23,13 +23,11 @@ package com.pinewoodbuilders.handlers;
 
 import com.pinewoodbuilders.database.transformers.GuildSettingsTransformer;
 import com.pinewoodbuilders.database.transformers.GuildTransformer;
-import com.pinewoodbuilders.database.transformers.PlayerTransformer;
 import com.pinewoodbuilders.database.transformers.VerificationTransformer;
 
 import javax.annotation.Nullable;
 
 public record DatabaseEventHolder(GuildTransformer guild,
-                                  PlayerTransformer player,
                                   VerificationTransformer verification,
                                   GuildSettingsTransformer guildSettings) {
 
@@ -45,19 +43,6 @@ public record DatabaseEventHolder(GuildTransformer guild,
         return guild;
     }
 
-    /**
-     * Gets the player database transformer for the current JDA event, the player
-     * transformer can be used to pull player experience information about the user
-     * who invoked the JDA event.
-     *
-     * @return The player database transformer for the user who invoked the JDA
-     * event, or {@code NULL} if the leveling feature is disabled in the
-     * guild.
-     */
-    @Nullable
-    public PlayerTransformer getPlayer() {
-        return player;
-    }
 
     @Nullable
     public VerificationTransformer getVerification() {

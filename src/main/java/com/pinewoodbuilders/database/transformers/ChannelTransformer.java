@@ -79,10 +79,6 @@ public class ChannelTransformer extends Transformer {
         return data.getString("id", "invalid-id");
     }
 
-    public BooleanModule getAI() {
-        return ai;
-    }
-
     public MessageModule getWelcome() {
         return welcome;
     }
@@ -94,7 +90,6 @@ public class ChannelTransformer extends Transformer {
     public HashMap<String, Object> toMap() {
         HashMap<String, Object> objects = new HashMap<>();
 
-        objects.put("ai", ai.toMap());
         objects.put("welcome", welcome.toMap());
         objects.put("goodbye", goodbye.toMap());
 

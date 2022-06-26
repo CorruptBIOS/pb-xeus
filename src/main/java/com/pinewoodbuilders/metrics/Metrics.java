@@ -26,13 +26,11 @@ import com.pinewoodbuilders.Xeus;
 import com.pinewoodbuilders.blacklist.bot.Ratelimit;
 import com.pinewoodbuilders.commands.Category;
 import com.pinewoodbuilders.commands.administration.MuteRoleCommand;
-import com.pinewoodbuilders.commands.utility.GlobalLeaderboardCommand;
-import com.pinewoodbuilders.commands.utility.LeaderboardCommand;
-import com.pinewoodbuilders.commands.utility.RankCommand;
 import com.pinewoodbuilders.contracts.middleware.Middleware;
-import com.pinewoodbuilders.database.controllers.*;
+import com.pinewoodbuilders.database.controllers.GuildController;
+import com.pinewoodbuilders.database.controllers.PurchaseController;
+import com.pinewoodbuilders.database.controllers.ReactionController;
 import com.pinewoodbuilders.handlers.adapter.JDAStateEventAdapter;
-import com.pinewoodbuilders.level.LevelManager;
 import com.pinewoodbuilders.metrics.routes.GetMetrics;
 import com.pinewoodbuilders.middleware.ThrottleMiddleware;
 import io.prometheus.client.Counter;
@@ -222,9 +220,7 @@ public class Metrics {
         Metrics.initializeEventMetrics();
 
         CacheMetricsCollector cacheMetrics = new CacheMetricsCollector().register();
-        cacheMetrics.addCache("levels", LevelManager.cache);
         cacheMetrics.addCache("guilds", GuildController.cache);
-        cacheMetrics.addCache("players", PlayerController.cache);
         cacheMetrics.addCache("purchases", PurchaseController.cache);
         cacheMetrics.addCache("categoryPrefixes", Category.cache);
         cacheMetrics.addCache("reaction-roles", ReactionController.cache);
@@ -232,9 +228,6 @@ public class Metrics {
         cacheMetrics.addCache("middlewareThrottleMessages", Middleware.messageCache);
         cacheMetrics.addCache("autorole", JDAStateEventAdapter.cache);
         cacheMetrics.addCache("muterole", MuteRoleCommand.cache);
-        cacheMetrics.addCache("rankScores", RankCommand.cache);
-        cacheMetrics.addCache("leaderboard", LeaderboardCommand.cache);
-        cacheMetrics.addCache("global-leaderboard", GlobalLeaderboardCommand.cache);
         cacheMetrics.addCache("blacklist-ratelimit", Ratelimit.cache);
 
         if (!avaire.getConfig().getBoolean("web-servlet.metrics",

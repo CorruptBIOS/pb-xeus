@@ -37,9 +37,11 @@ import com.pinewoodbuilders.contracts.permission.GuildPermissionCheckType;
 import com.pinewoodbuilders.contracts.verification.VerificationEntity;
 import com.pinewoodbuilders.database.collection.Collection;
 import com.pinewoodbuilders.database.collection.DataRow;
-import com.pinewoodbuilders.database.controllers.*;
+import com.pinewoodbuilders.database.controllers.GuildController;
+import com.pinewoodbuilders.database.controllers.GuildSettingsController;
+import com.pinewoodbuilders.database.controllers.ReactionController;
+import com.pinewoodbuilders.database.controllers.VerificationController;
 import com.pinewoodbuilders.database.query.QueryBuilder;
-import com.pinewoodbuilders.database.transformers.ChannelTransformer;
 import com.pinewoodbuilders.database.transformers.GlobalSettingsTransformer;
 import com.pinewoodbuilders.database.transformers.GuildSettingsTransformer;
 import com.pinewoodbuilders.database.transformers.GuildTransformer;
@@ -140,10 +142,6 @@ public class MessageEventAdapter extends EventAdapter {
         }
 
         loadDatabasePropertiesIntoMemory(event).thenAccept(databaseEventHolder -> {
-            if (databaseEventHolder.getGuild() != null && databaseEventHolder.getPlayer() != null) {
-                avaire.getLevelManager().rewardPlayer(event, databaseEventHolder.getGuild(), databaseEventHolder.getPlayer());
-            }
-
             CommandContainer container = CommandHandler.getCommand(avaire, event.getMessage(), event.getMessage().getContentRaw());
             if (container != null && canExecuteCommand(event, container)) {
                 invokeMiddlewareStack(new MiddlewareStack(event.getMessage(), container, databaseEventHolder));
@@ -660,14 +658,6 @@ public class MessageEventAdapter extends EventAdapter {
             rawContent.equals("<@!" + avaire.getSelfUser().getId() + ">");
     }
 
-    private boolean isAIEnabledForChannel(MessageReceivedEvent event, GuildTransformer transformer) {
-        if (transformer == null) {
-            return true;
-        }
-
-        ChannelTransformer channel = transformer.getChannel(event.getChannel().getId());
-        return channel == null || channel.getAI().isEnabled();
-    }
 
     private void sendTagInformationMessage(MessageReceivedEvent event) {
         String author = "**Senither#0001**";
@@ -735,34 +725,34 @@ public class MessageEventAdapter extends EventAdapter {
     private CompletableFuture<DatabaseEventHolder> loadDatabasePropertiesIntoMemory(final MessageReceivedEvent event) {
         return CompletableFuture.supplyAsync(() -> {
             if (!event.getChannelType().isGuild()) {
-                return new DatabaseEventHolder(null, null, null, null);
+                return new DatabaseEventHolder(null, null, null);
             }
 
             GuildTransformer guild = GuildController.fetchGuild(avaire, event.getMessage());
             GuildSettingsTransformer settings = GuildSettingsController.fetchGuildSettingsFromGuild(avaire, event.getGuild());
 
             if (settings.getMainGroupId() == 0) {
-                return new DatabaseEventHolder(guild, null, VerificationController.fetchGuild(avaire, event.getMessage()), settings);
+                return new DatabaseEventHolder(guild, VerificationController.fetchGuild(avaire, event.getMessage()), settings);
             }
 
-            return new DatabaseEventHolder(guild, PlayerController.fetchPlayer(avaire, event.getMessage()), VerificationController.fetchGuild(avaire, event.getMessage()), GuildSettingsController.fetchGuildSettingsFromGuild(avaire, event.getGuild()));
+            return new DatabaseEventHolder(guild, VerificationController.fetchGuild(avaire, event.getMessage()), GuildSettingsController.fetchGuildSettingsFromGuild(avaire, event.getGuild()));
         });
     }
 
     private CompletableFuture<DatabaseEventHolder> loadDatabasePropertiesIntoMemory(final MessageUpdateEvent event) {
         return CompletableFuture.supplyAsync(() -> {
             if (!event.getChannelType().isGuild()) {
-                return new DatabaseEventHolder(null, null, null, null);
+                return new DatabaseEventHolder(null, null, null);
             }
 
             GuildTransformer guild = GuildController.fetchGuild(avaire, event.getMessage());
             GuildSettingsTransformer settings = GuildSettingsController.fetchGuildSettingsFromGuild(avaire, event.getGuild());
 
             if (settings.getMainGroupId() == 0) {
-                return new DatabaseEventHolder(guild, null, VerificationController.fetchGuild(avaire, event.getMessage()), settings);
+                return new DatabaseEventHolder(guild, VerificationController.fetchGuild(avaire, event.getMessage()), settings);
             }
 
-            return new DatabaseEventHolder(guild, PlayerController.fetchPlayer(avaire, event.getMessage()), VerificationController.fetchGuild(avaire, event.getMessage()), GuildSettingsController.fetchGuildSettingsFromGuild(avaire, event.getGuild()));
+            return new DatabaseEventHolder(guild, VerificationController.fetchGuild(avaire, event.getMessage()), GuildSettingsController.fetchGuildSettingsFromGuild(avaire, event.getGuild()));
         });
     }
 

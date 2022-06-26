@@ -49,7 +49,6 @@ public class ConfigurationSerialization {
         registerClass(ChannelTransformer.class);
         registerClass(GuildTransformer.class);
         registerClass(GuildTypeTransformer.class);
-        registerClass(PlayerTransformer.class);
         registerClass(PlaylistTransformer.class);
     }
 

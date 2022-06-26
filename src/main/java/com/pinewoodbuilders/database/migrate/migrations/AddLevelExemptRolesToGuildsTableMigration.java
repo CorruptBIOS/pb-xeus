@@ -36,7 +36,7 @@ public class AddLevelExemptRolesToGuildsTableMigration implements Migration {
     }
 
     @Override
-    public boolean up(Schema schema) throws SQLException {
+    public boolean down(Schema schema) throws SQLException {
         if (schema.hasColumn(Constants.GUILD_TABLE_NAME, "level_exempt_roles")) {
             return true;
         }
@@ -57,7 +57,7 @@ public class AddLevelExemptRolesToGuildsTableMigration implements Migration {
     }
 
     @Override
-    public boolean down(Schema schema) throws SQLException {
+    public boolean up(Schema schema) throws SQLException {
         if (!schema.hasColumn(Constants.GUILD_TABLE_NAME, "level_exempt_roles")) {
             return true;
         }

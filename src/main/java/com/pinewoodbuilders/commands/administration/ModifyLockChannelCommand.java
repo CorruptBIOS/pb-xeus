@@ -192,7 +192,7 @@ public class ModifyLockChannelCommand extends Command {
 
             return true;
         } catch (SQLException e) {
-            log.error("Failed to save the level exempt channels to the data for guild {}, error: {}",
+            log.error("Failed to save the lock channels to the data for guild {}, error: {}",
                 context.getGuild().getId(), e.getMessage(), e
             );
 

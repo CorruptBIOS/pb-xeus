@@ -41,8 +41,6 @@ public class RunEveryMinuteJob extends Job {
     private final DeleteExpiredBlacklistEntitiesTask deleteExpiredBlacklistEntitiesTask = new DeleteExpiredBlacklistEntitiesTask();
     private final UpdateWebsocketHeartbeatMetricsTask updateWebsocketHeartbeatMetricsTask = new UpdateWebsocketHeartbeatMetricsTask();
     private final SyncValidVoteRequestsWithMetricsTask syncValidVoteRequestsWithMetricsTask = new SyncValidVoteRequestsWithMetricsTask();
-    private final SyncPlayerExperienceWithDatabaseTask syncPlayerExperienceWithDatabaseTask = new SyncPlayerExperienceWithDatabaseTask();
-    private final SyncPlayerUpdateReferencesWithDatabaseTask syncPlayerUpdateReferencesWithDatabaseTask = new SyncPlayerUpdateReferencesWithDatabaseTask();
     private final DrainOnWatchQueueTask drainOnWatchQueueTask = new DrainOnWatchQueueTask();
     private final DrainUnbanQueueTask drainUnbanQueueTask = new DrainUnbanQueueTask();
 
@@ -64,8 +62,6 @@ public class RunEveryMinuteJob extends Job {
             deleteExpiredBlacklistEntitiesTask,
             updateWebsocketHeartbeatMetricsTask,
             syncValidVoteRequestsWithMetricsTask,
-            syncPlayerExperienceWithDatabaseTask,
-            syncPlayerUpdateReferencesWithDatabaseTask,
             drainOnWatchQueueTask,
             drainGlobalWatchQueueTask,
             drainUnbanQueueTask
