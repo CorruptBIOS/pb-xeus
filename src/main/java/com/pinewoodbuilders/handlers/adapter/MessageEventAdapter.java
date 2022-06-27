@@ -63,9 +63,11 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.GenericMessageEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.MessageUpdateEvent;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import okhttp3.HttpUrl;
 import org.nibor.autolink.LinkExtractor;
 import org.nibor.autolink.LinkSpan;
@@ -91,7 +93,7 @@ import java.util.stream.Collectors;
 
 public class MessageEventAdapter extends EventAdapter {
 
-    public static final Set<Long> hasReceivedInfoMessageInTheLastMinute = new HashSet<>();
+    public static final Set <Long> hasReceivedInfoMessageInTheLastMinute = new HashSet <>();
     private static final ExecutorService commandService = Executors.newCachedThreadPool(
         new ThreadFactoryBuilder()
             .setNameFormat("avaire-command-thread-%d")
@@ -118,8 +120,8 @@ public class MessageEventAdapter extends EventAdapter {
         super(avaire);
     }
 
-    public static List<String> replace(List<String> strings) {
-        ListIterator<String> iterator = strings.listIterator();
+    public static List <String> replace(List <String> strings) {
+        ListIterator <String> iterator = strings.listIterator();
         while (iterator.hasNext()) {
             iterator.set(iterator.next().toLowerCase());
         }
@@ -170,7 +172,7 @@ public class MessageEventAdapter extends EventAdapter {
 
     private boolean checkWildcardFilter(String contentStripped, GuildSettingsTransformer guild, Message messageId) {
         String words = contentStripped.toLowerCase();
-        List<String> badWordsList = replace(guild.getBadWordsWildcard());
+        List <String> badWordsList = replace(guild.getBadWordsWildcard());
         // system.out.println("UFWords: " + words);
         // system.out.println("FWords: " + badWordsList);
 
@@ -185,8 +187,8 @@ public class MessageEventAdapter extends EventAdapter {
 
     private boolean checkExactFilter(String contentRaw, GuildSettingsTransformer databaseEventHolder, Message messageId) {
         // system.out.println("FILTER ENABLED");
-        List<String> words = replace(Arrays.asList(contentRaw.split(" ")));
-        List<String> badWordsList = replace(databaseEventHolder.getBadWordsExact());
+        List <String> words = replace(Arrays.asList(contentRaw.split(" ")));
+        List <String> badWordsList = replace(databaseEventHolder.getBadWordsExact());
 
         // system.out.println("UWords: " + words);
         // system.out.println("FWords: " + badWordsList);
@@ -200,7 +202,7 @@ public class MessageEventAdapter extends EventAdapter {
 
     private boolean checkGlobalWildcardFilter(String contentStripped, GlobalSettingsTransformer guild, Message messageId, GuildSettingsTransformer settings) {
         String words = contentStripped.toLowerCase();
-        List<String> badWordsList = replace(guild.getGlobalFilterWildcard());
+        List <String> badWordsList = replace(guild.getGlobalFilterWildcard());
         //System.out.println("UFWords: " + words);
         //System.out.println("FWords: " + badWordsList);
 
@@ -215,8 +217,8 @@ public class MessageEventAdapter extends EventAdapter {
 
     private boolean checkGlobalExactFilter(String contentRaw, GlobalSettingsTransformer databaseEventHolder, Message messageId, GuildSettingsTransformer guild) {
         // system.out.println("FILTER ENABLED");
-        List<String> words = replace(Arrays.asList(contentRaw.split(" ")));
-        List<String> badWordsList = replace(databaseEventHolder.getGlobalFilterExact());
+        List <String> words = replace(Arrays.asList(contentRaw.split(" ")));
+        List <String> badWordsList = replace(databaseEventHolder.getGlobalFilterExact());
 
         // system.out.println("UWords: " + words);
         // system.out.println("FWords: " + badWordsList);
@@ -333,7 +335,7 @@ public class MessageEventAdapter extends EventAdapter {
             .linkTypes(EnumSet.of(LinkType.URL, LinkType.WWW)) // limit to URLs
             .build();
 
-        Iterable<LinkSpan> links = linkExtractor.extractLinks(input);
+        Iterable <LinkSpan> links = linkExtractor.extractLinks(input);
 
         for (LinkSpan link : links) {
             String validLink = input.substring(link.getBeginIndex(), link.getEndIndex());
@@ -351,7 +353,7 @@ public class MessageEventAdapter extends EventAdapter {
                             continue;
                         }
 
-                        List<MessageEmbed> lme = new ArrayList<>();
+                        List <MessageEmbed> lme = new ArrayList <>();
 
                         PlaceholderMessage phm = MessageFactory.makeEmbeddedMessage(message.getGuild().getTextChannelById(databaseEventHolder.getGuildSettings().getLinkFilterLog()))
                             .setTitle("Link Found - Level " + level.name())
@@ -376,7 +378,7 @@ public class MessageEventAdapter extends EventAdapter {
 
                         if (level.isCheckRedirect()) {
                             try {
-                                List<String> redirects = fetchRedirect(validLink, new ArrayList<>());
+                                List <String> redirects = fetchRedirect(validLink, new ArrayList <>());
                                 if (redirects.size() > 1) {
                                     lme.add(new EmbedBuilder()
                                         .setDescription(redirects.stream().map(l -> " - " + l + "\n").collect(Collectors.joining())).setColor(level.getColor()).build());
@@ -402,7 +404,7 @@ public class MessageEventAdapter extends EventAdapter {
         }
     }
 
-    private List<String> fetchRedirect(String url, List<String> redirects) throws IOException {
+    private List <String> fetchRedirect(String url, List <String> redirects) throws IOException {
         redirects.add(url);
 
         HttpURLConnection con = (HttpURLConnection) (new URL(url).openConnection());
@@ -449,7 +451,7 @@ public class MessageEventAdapter extends EventAdapter {
             }
         }
         if (guild.getMessageSpam() > 0) {
-            List<Message> history = message.getChannel().getIterableHistory().stream().limit(10).filter(msg -> !msg.equals(message)).collect(Collectors.toList());
+            List <Message> history = message.getChannel().getIterableHistory().stream().limit(10).filter(msg -> !msg.equals(message)).collect(Collectors.toList());
             int spam = (int) history.stream().filter(m -> m.getAuthor().equals(message.getAuthor()) && !message.getAuthor().isBot()).filter(msg -> (message.getTimeCreated().toEpochSecond() - msg.getTimeCreated().toEpochSecond()) < 10).count();
 
             if (spam >= guild.getMessageSpam() && !message.getGuild().getOwner().equals(message.getMember())) {
@@ -463,7 +465,7 @@ public class MessageEventAdapter extends EventAdapter {
             }
         }
         if (guild.getImageSpam() > 0) {
-            List<Message> history = message.getChannel().getIterableHistory().stream().limit(10).filter(msg -> !msg.equals(message)).collect(Collectors.toList());
+            List <Message> history = message.getChannel().getIterableHistory().stream().limit(10).filter(msg -> !msg.equals(message)).collect(Collectors.toList());
             int spam = (int) history.stream().filter(m -> m.getAuthor().equals(message.getAuthor()) && !message.getAuthor().isBot()).filter(msg -> (message.getTimeCreated().toEpochSecond() - msg.getTimeCreated().toEpochSecond()) < 10 && (msg.getAttachments().size() > 0 && message.getAttachments().size() > 0)).count();
             if (spam >= guild.getImageSpam() && !message.getGuild().getOwner().equals(message.getMember())) {
                 warnUserColor(message, guild, "**GLOBAL AUTOMOD**: Global Automod was triggered!\n**Type**: " + "``Image Spam``\n**Sentence Filtered**: \n" + message.getContentRaw(), new Color(0, 0, 0), message.getChannel());
@@ -478,7 +480,7 @@ public class MessageEventAdapter extends EventAdapter {
             }
         }
         if (guild.getLinkSpam() > 0) {
-            List<Message> history = message.getChannel().getIterableHistory().stream().limit(10).filter(msg -> !msg.equals(message)).collect(Collectors.toList());
+            List <Message> history = message.getChannel().getIterableHistory().stream().limit(10).filter(msg -> !msg.equals(message)).collect(Collectors.toList());
             int spam = (int) history.stream().filter(m -> m.getAuthor().equals(message.getAuthor()) && !message.getAuthor().isBot()).filter(msg -> (message.getTimeCreated().toEpochSecond() - msg.getTimeCreated().toEpochSecond()) < 10 && (message.getContentRaw().contains("http://") || message.getContentRaw().contains("https://"))).count();
             if (spam >= guild.getLinkSpam() && !message.getGuild().getOwner().equals(message.getMember())) {
                 for (Message m : history) {
@@ -539,7 +541,7 @@ public class MessageEventAdapter extends EventAdapter {
     private void checkPIAInviteFilter(Message message, GlobalSettingsTransformer settings, DatabaseEventHolder databaseEventHolder) {
         for (String i : message.getInvites()) {
             Invite.resolve(message.getJDA(), i).queue(v -> {
-                List<Guild> g = avaire.getRobloxAPIManager().getVerification().getGuildsByMainGroupId(settings.getMainGroupId());
+                List <Guild> g = avaire.getRobloxAPIManager().getVerification().getGuildsByMainGroupId(settings.getMainGroupId());
 
                 if (g.stream().noneMatch(guild -> guild.getId().equals(v.getGuild().getId()))) {
                     message.delete().queue();
@@ -691,7 +693,7 @@ public class MessageEventAdapter extends EventAdapter {
         hasReceivedInfoMessageInTheLastMinute.add(event.getAuthor().getIdLong());
 
         try {
-            ArrayList<String> strings = new ArrayList<>(Arrays.asList(
+            ArrayList <String> strings = new ArrayList <>(Arrays.asList(
                 "To invite me to your server, use this link:",
                 "*:oauth*",
                 "",
@@ -722,7 +724,7 @@ public class MessageEventAdapter extends EventAdapter {
         }
     }
 
-    private CompletableFuture<DatabaseEventHolder> loadDatabasePropertiesIntoMemory(final MessageReceivedEvent event) {
+    private CompletableFuture <DatabaseEventHolder> loadDatabasePropertiesIntoMemory(final MessageReceivedEvent event) {
         return CompletableFuture.supplyAsync(() -> {
             if (!event.getChannelType().isGuild()) {
                 return new DatabaseEventHolder(null, null, null);
@@ -739,7 +741,7 @@ public class MessageEventAdapter extends EventAdapter {
         });
     }
 
-    private CompletableFuture<DatabaseEventHolder> loadDatabasePropertiesIntoMemory(final MessageUpdateEvent event) {
+    private CompletableFuture <DatabaseEventHolder> loadDatabasePropertiesIntoMemory(final MessageUpdateEvent event) {
         return CompletableFuture.supplyAsync(() -> {
             if (!event.getChannelType().isGuild()) {
                 return new DatabaseEventHolder(null, null, null);
@@ -756,7 +758,7 @@ public class MessageEventAdapter extends EventAdapter {
         });
     }
 
-    public void onMessageDelete(MessageChannel messageChannel, List<String> messageIds) {
+    public void onMessageDelete(MessageChannel messageChannel, List <String> messageIds) {
         if (!(messageChannel instanceof GuildChannel)) {
             return;
         }
@@ -766,7 +768,7 @@ public class MessageEventAdapter extends EventAdapter {
             return;
         }
 
-        List<String> removedReactionMessageIds = new ArrayList<>();
+        List <String> removedReactionMessageIds = new ArrayList <>();
         for (DataRow row : reactions) {
             for (String messageId : messageIds) {
                 if (Objects.equals(row.getString("message_id"), messageId)) {
@@ -851,7 +853,7 @@ public class MessageEventAdapter extends EventAdapter {
                 return;
             }
 
-            ArrayList<Role> list = new ArrayList<>();
+            ArrayList <Role> list = new ArrayList <>();
 
             for (Long r : databaseEventHolder.getGuildSettings().getNoLinksRoles()) {
                 if (event.getGuild().getRoleById(r) != null) {
@@ -938,9 +940,9 @@ public class MessageEventAdapter extends EventAdapter {
         GuildSettingsTransformer gst = GuildSettingsController.fetchGuild(avaire, event.getMessage());
         if (gst == null) return;
         if (gst.getMainGroupId() == 0) return;
-        List<MessageEmbed> message = event.getMessage().getEmbeds();
+        List <MessageEmbed> message = event.getMessage().getEmbeds();
         MessageEmbed me = message.get(0);
-        List<MessageEmbed.Field> fields = me.getFields();
+        List <MessageEmbed.Field> fields = me.getFields();
         if (fields.size() < 1) return;
 
         boolean isGameBan = false;
@@ -1002,14 +1004,50 @@ public class MessageEventAdapter extends EventAdapter {
             } // React with ⭕
 
             try {
-                avaire.getGlobalPunishmentManager().registerGlobalBan(moderatorEntity.getDiscordId().toString(), gst.getMainGroupId(), bannedEntity != null ? bannedEntity.getDiscordId().toString() : null, bannedRobloxId, usernameFinal, reason);
-                if (bannedEntity != null) {
-                    executeGlobalBan(reason, bannedEntity.getDiscordId().toString(), gst, bannedEntity, moderatorEntity, msg.getGuild());
-                    msg.addReaction("✅").queue();
-                    return;
-                } else {
-                    msg.addReaction("☑").queue();
-                }
+
+                String finalReason = reason;
+                long finalBannedRobloxId = bannedRobloxId;
+                String finalUsernameFinal = usernameFinal;
+                Button approveBan = Button.primary("ban:" + finalBannedRobloxId, "Ban " + finalUsernameFinal);
+
+                event.getChannel().sendMessage("<@" + moderatorEntity.getDiscordId() + ">\n" +
+                        "You just banned " + finalUsernameFinal + " for: ```" + reason + "```\n\n" +
+                        "Would you like to issue a global-ban? (This message will dissapear in 5 minutes)")
+                    .setActionRow(approveBan).queue(
+                        message1 -> {
+                            avaire.getWaiter().waitForEvent(ButtonInteractionEvent.class, e -> e.getMessage().getId().equals(message1.getId()), e -> {
+                                if (
+                                    e.getButton().getId().equals("ban:" + finalBannedRobloxId)
+                                ) {
+
+                                    if (e.getMember().getIdLong() != moderatorEntity.getDiscordId()) {
+                                        e.reply("You where not the person who issued the ban... <@" + moderatorEntity.getDiscordId() + "> has to push the button.").queue();
+                                    }
+
+                                    try {
+                                        avaire.getGlobalPunishmentManager().registerGlobalBan(moderatorEntity.getDiscordId().toString(), gst.getMainGroupId(), bannedEntity != null ? bannedEntity.getDiscordId().toString() : null, finalBannedRobloxId, finalUsernameFinal, finalReason);
+                                    } catch (SQLException ex) {
+                                        e.reply("Hi, something went wrong in the ban system.\n" +
+                                            "Please contact stefano... PLEASE. CONTACT HIM... NOWWWWW!!!!!?!?!?!?").queue();
+                                        throw new RuntimeException(ex);
+                                    }
+                                    message1.delete().queue();
+                                    e.reply("<@" + moderatorEntity.getDiscordId() + ">\n" +
+                                        "You just global-banned " + finalUsernameFinal + " for: ```" + finalReason + "```.").queue(del -> del.deleteOriginal().queueAfter(15, TimeUnit.SECONDS));
+
+                                    if (bannedEntity == null) {
+                                        msg.addReaction("☑").queue();
+                                    } else {
+                                        msg.addReaction("✅").queue();
+                                    }
+
+                                }
+                            }, 5, TimeUnit.MINUTES, () -> {message1.delete().queue();});
+                        }
+                    );
+
+                return;
+
             } catch (Exception e) {
                 e.printStackTrace(); // React with ❌
                 msg.addReaction("❌").queue();
@@ -1019,6 +1057,7 @@ public class MessageEventAdapter extends EventAdapter {
 
     }
 
+
     private void executeGlobalBan(String reason, String bannedUserId, GuildSettingsTransformer settingsTransformer, VerificationEntity ve, VerificationEntity moderator, Guild moderatorDiscord) {
         Guild appealsGuild = null;
         if (settingsTransformer.getGlobalSettings().getAppealsDiscordId() != 0) {
@@ -1026,7 +1065,7 @@ public class MessageEventAdapter extends EventAdapter {
         }
 
         int time = 0;
-        List<Guild> guilds = avaire.getRobloxAPIManager().getVerification().getGuildsByMainGroupId(settingsTransformer.getMainGroupId());
+        List <Guild> guilds = avaire.getRobloxAPIManager().getVerification().getGuildsByMainGroupId(settingsTransformer.getMainGroupId());
 
         for (Guild guild : guilds) {
             if (appealsGuild != null) {
